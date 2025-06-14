@@ -1,0 +1,32 @@
+esphome:
+  name: gp1294-example
+
+esp32:
+  board: seeed_xiao_esp32c3
+  framework:
+    type: esp-idf
+
+external_components:
+  - source: github://anna-oake/esphome-gp12xx
+
+spi:
+  clk_pin: 10
+  mosi_pin: 21
+
+display:
+  - platform: gp12xx
+    model: "GP1294 256x48"
+    cs_pin: 20
+    filament_pin: 7
+    reset_pin: 6 # optional
+    brightness: 30%
+    lambda: |-
+      it.rectangle(0, 0, 256, 48);
+
+# This minimal example shows how to drive a GP1294 display using a ESP32-C3 board.
+# Connections for this example:
+# FILMENT_EN - 7
+# CLOCK      - 10
+# CHIPSELECT - 20
+# DATA       - 21
+# RESET      - 6 (optional)
