@@ -14,7 +14,7 @@ enum GP12XXModel {
 
 class GP12XX : public display::DisplayBuffer,
                public spi::SPIDevice<spi::BIT_ORDER_LSB_FIRST, spi::CLOCK_POLARITY_LOW, spi::CLOCK_PHASE_LEADING,
-                                     spi::DATA_RATE_8MHZ> {
+                                     spi::DATA_RATE_4MHZ> {
  public:
   void setup() override;
   void dump_config() override;
