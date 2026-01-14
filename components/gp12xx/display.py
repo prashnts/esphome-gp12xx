@@ -1,7 +1,6 @@
-from esphome import pins
 import esphome.codegen as cg
-from esphome.components import spi, display
 import esphome.config_validation as cv
+from esphome.components import display, spi
 from esphome.const import (
     CONF_ID,
     CONF_PAGES,
@@ -13,6 +12,7 @@ from esphome.const import (
     CONF_OFFSET_Y,
     CONF_RESET_PIN,
 )
+from esphome import pins
 
 DEPENDENCIES = ["spi"]
 
@@ -26,6 +26,7 @@ GP12XX = gp12xx.class_(
 GP12XXModel = gp12xx.enum("GP12XXModel")
 MODELS = {
     "GP1294_256X48": GP12XXModel.GP1294_MODEL_256_48,
+    "GP1287_256X50": GP12XXModel.GP1287_MODEL_256_50,
 }
 GP12XX_MODEL = cv.enum(MODELS, upper=True, space="_")
 

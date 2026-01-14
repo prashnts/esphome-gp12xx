@@ -170,6 +170,8 @@ int GP12XX::get_height_internal() {
   switch (this->model_) {
     case GP1294_MODEL_256_48:
       return 48;
+    case GP1287_MODEL_256_50:
+      return 50;
     default:
       return 0;
   }
@@ -178,6 +180,8 @@ int GP12XX::get_height_internal() {
 int GP12XX::get_width_internal() {
   switch (this->model_) {
     case GP1294_MODEL_256_48:
+      return 256;
+    case GP1287_MODEL_256_50:
       return 256;
     default:
       return 0;
@@ -205,6 +209,8 @@ const char *GP12XX::model_str_() {
   switch (this->model_) {
     case GP1294_MODEL_256_48:
       return "GP1294 256x48";
+    case GP1287_MODEL_256_50:
+      return "GP1287 256x50";
     default:
       return "Unknown";
   }

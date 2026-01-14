@@ -10,6 +10,7 @@ namespace gp12xx {
 
 enum GP12XXModel {
   GP1294_MODEL_256_48 = 0,
+  GP1287_MODEL_256_50 = 1,
 };
 
 class GP12XX : public display::DisplayBuffer,
