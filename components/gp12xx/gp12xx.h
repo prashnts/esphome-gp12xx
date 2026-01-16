@@ -26,6 +26,7 @@ class GP12XX : public display::DisplayBuffer,
   float get_brightness() const { return this->brightness_; }
   void set_brightness(float brightness);
   void set_invert(bool invert);
+  bool is_inverted() const { return this->invert_; }
   bool is_on() const { return this->is_on_; }
   void turn_on();
   void turn_off();

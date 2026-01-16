@@ -1,32 +1,144 @@
+substitutions:
+  node: vfd-matrix
+
 esphome:
-  name: gp1294-example
+  name: ${node}
+  project:
+    name: 'noop.vfdmatrix'
+    version: '0.1.0'
 
 esp32:
-  board: seeed_xiao_esp32c3
+  board: esp32dev
   framework:
     type: esp-idf
 
 external_components:
-  - source: github://anna-oake/esphome-gp12xx
+  - source:
+      type: local
+      path: components
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+ota:
+  platform: esphome
+logger:
+
+time:
+  - platform: sntp
+    id: ntp_time
+    timezone: 'Europe/Paris'
+
+font:
+  - file: ATC.ttf
+    id: atc
+    size: 16
+  - file: ATC.ttf
+    id: atc2x
+    size: 32
+
+output:
+  - platform: template
+    id: matrix_brightness_output
+    type: float
+    write_action:
+      - lambda: |-
+          id(vfd_matrix_disp).set_brightness(state);
+
+light:
+  - platform: monochromatic
+    name: "Matrix Brightness"
+    id: matrix_brightness
+    output: matrix_brightness_output
+    restore_mode: ALWAYS_ON
+
+text:
+  - platform: template
+    id: msg_text_1
+    name: ${node} msg line 0
+    restore_value: true
+    initial_value: "boop"
+    mode: text
+    optimistic: true
+  - platform: template
+    id: msg_text_2
+    name: ${node} msg line 1
+    restore_value: true
+    initial_value: "boop"
+    mode: text
+    optimistic: true
+  - platform: template
+    id: msg_text_3
+    name: ${node} msg line 2
+    restore_value: true
+    initial_value: "boop"
+    mode: text
+    optimistic: true
 
 spi:
-  clk_pin: 10
-  mosi_pin: 21
+  clk_pin: 18
+  mosi_pin: 26
 
 display:
   - platform: gp12xx
-    model: "GP1294 256x48"
-    cs_pin: 20
-    filament_pin: 7
-    reset_pin: 6 # optional
-    brightness: 30%
+    id: vfd_matrix_disp
+    model: "GP1287 256x50"
+    cs_pin: 19
+    filament_pin: 22
+    reset_pin: 21 # optional
+    brightness: 80%
+    rotation: 180
+    update_interval: 0.5s
     lambda: |-
-      it.rectangle(0, 0, 256, 48);
+      auto time = id(ntp_time).now();
 
-# This minimal example shows how to drive a GP1294 display using a ESP32-C3 board.
-# Connections for this example:
-# FILMENT_EN - 7
-# CLOCK      - 10
-# CHIPSELECT - 20
-# DATA       - 21
-# RESET      - 6 (optional)
+      it.printf(162, 2, id(atc2x), "%02d", time.hour);
+      if (time.second % 2) {
+        it.printf(207, 6, id(atc), ":");
+      }
+      it.printf(214, 2, id(atc2x), "%02d", time.minute);
+      it.printf(160, 35, id(atc), "%02d\/%02d-%02d", time.day_of_month, time.month, time.second);
+
+
+      it.print(0, 2, id(atc), id(msg_text_1).state.c_str());
+      it.print(0, 20, id(atc), id(msg_text_2).state.c_str());
+      it.print(0, 35, id(atc), id(msg_text_3).state.c_str());
+
+binary_sensor:
+  - platform: homeassistant
+    name: study occupancy
+    entity_id: binary_sensor.radar_study_presence
+    id: occupancy
+    on_press:
+      then:
+        - lambda: |-
+            id(vfd_matrix_disp).turn_on();
+    on_release:
+      then:
+        - lambda: |-
+            id(vfd_matrix_disp).turn_off();
+
+switch:
+  - platform: template
+    name: "Matrix Inversion"
+    lambda: |-
+      return id(vfd_matrix_disp).is_inverted();
+    turn_on_action:
+      - lambda: |-
+          id(vfd_matrix_disp).set_invert(true);
+    turn_off_action:
+      - lambda: |-
+          id(vfd_matrix_disp).set_invert(false);
+
+  - platform: template
+    name: "Matrix Power"
+    lambda: |-
+      return id(vfd_matrix_disp).is_on();
+    turn_on_action:
+      - lambda: |-
+          id(vfd_matrix_disp).turn_on();
+    turn_off_action:
+      - lambda: |-
+          id(vfd_matrix_disp).turn_off();
