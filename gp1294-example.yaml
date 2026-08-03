@@ -89,7 +89,7 @@ display:
     filament_pin: 22
     reset_pin: 21 # optional
     brightness: 80%
-    rotation: 180
+    rotation: 0
     update_interval: 0.5s
     lambda: |-
       auto time = id(ntp_time).now();
