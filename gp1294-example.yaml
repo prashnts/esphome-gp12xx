@@ -38,6 +38,9 @@ font:
   - file: ATC.ttf
     id: atc2x
     size: 32
+  - file: 3x5-Microfont-Mono.ttf
+    id: microfont
+    size: 8
 
 output:
   - platform: template
@@ -99,17 +102,17 @@ display:
         it.printf(207, 6, id(atc), ":");
       }
       it.printf(214, 2, id(atc2x), "%02d", time.minute);
-      it.printf(160, 35, id(atc), "%02d\/%02d-%02d", time.day_of_month, time.month, time.second);
+      it.printf(160, 35, id(atc), "%02d\/%02d %02d", time.day_of_month, time.month, time.second);
 
 
-      it.print(0, 2, id(atc), id(msg_text_1).state.c_str());
-      it.print(0, 20, id(atc), id(msg_text_2).state.c_str());
-      it.print(0, 35, id(atc), id(msg_text_3).state.c_str());
+      it.print(0, 0, id(atc), id(msg_text_1).state.c_str());
+      it.print(0, 18, id(atc), id(msg_text_2).state.c_str());
+      it.print(0, 35, id(microfont), id(msg_text_3).state.c_str());
 
 binary_sensor:
   - platform: homeassistant
     name: study occupancy
-    entity_id: binary_sensor.radar_study_presence
+    entity_id: binary_sensor.presence_kitchen_devices
     id: occupancy
     on_press:
       then:
